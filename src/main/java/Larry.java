@@ -12,6 +12,8 @@ public class Larry {
 
         // initiate instance of scanner
         Scanner scanner = new Scanner(System.in);
+        String[] tasks = new String[100];
+        int taskCount = 0;
 
         System.out.println(line);
         System.out.print(banner);
@@ -25,7 +27,20 @@ public class Larry {
             if (input.equals("bye")) {
                 break;
             }
-            System.out.println(input);
+
+            if (input.equals("list")) {
+                System.out.println(line);
+                for (int i = 0; i < taskCount; i++) {
+                    System.out.println((i + 1) + ". " + tasks[i]);
+                }
+                System.out.println(line);
+            } else {
+                tasks[taskCount] = input;
+                taskCount++;
+                System.out.println(line);
+                System.out.println("added: " + input);
+                System.out.println(line);
+            }
         }
 
         System.out.println("Bye. Hope to see you again soon!");
