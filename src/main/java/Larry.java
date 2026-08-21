@@ -12,7 +12,7 @@ public class Larry {
 
         // initiate instance of scanner
         Scanner scanner = new Scanner(System.in);
-        String[] tasks = new String[100];
+        Task[] tasks = new Task[100];
         int taskCount = 0;
         boolean[] isDone = new boolean[100];
 
@@ -40,7 +40,9 @@ public class Larry {
             } else if (input.startsWith("mark ")) {
                 int taskNumber = Integer.parseInt(input.substring(5));
                 int index = taskNumber - 1;
-                isDone[index] = true;
+
+                tasks[index].markAsDone();
+
                 System.out.println(line);
                 System.out.println("Nice! I've marked this task as done:");
                 System.out.println("[X] " + tasks[index]);
@@ -48,14 +50,15 @@ public class Larry {
             } else if (input.startsWith("unmark ")) {
                 int taskNumber = Integer.parseInt(input.substring(7));
                 int index = taskNumber - 1;
-                isDone[index] = false;
+
+                tasks[index].markAsNotDone();
+
                 System.out.println(line);
                 System.out.println("OK, I've marked this task as not done yet:");
                 System.out.println("[ ] " + tasks[index]);
                 System.out.println(line);
             } else {
-                tasks[taskCount] = input;
-                isDone[taskCount] = false;
+                tasks[taskCount] = new Task(input);
                 taskCount++;
                 System.out.println(line);
                 System.out.println("added: " + input);
