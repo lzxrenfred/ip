@@ -10,11 +10,9 @@ public class Larry {
 
         String line = "____________________________________________________________";
 
-        // initiate instance of scanner
         Scanner scanner = new Scanner(System.in);
         Task[] tasks = new Task[100];
         int taskCount = 0;
-        boolean[] isDone = new boolean[100];
 
         System.out.println(line);
         System.out.print(banner);
@@ -25,6 +23,7 @@ public class Larry {
 
         while (true) {
             String input = scanner.nextLine();
+
             if (input.equals("bye")) {
                 break;
             }
@@ -32,11 +31,13 @@ public class Larry {
             if (input.equals("list")) {
                 System.out.println(line);
                 System.out.println("Here are the tasks in your list:");
+
                 for (int i = 0; i < taskCount; i++) {
-                    String status = isDone[i] ? "X" : " ";
-                    System.out.println((i + 1) + ".[" + status + "] " + tasks[i]);
+                    System.out.println((i + 1) + "." + tasks[i]);
                 }
+
                 System.out.println(line);
+
             } else if (input.startsWith("mark ")) {
                 int taskNumber = Integer.parseInt(input.substring(5));
                 int index = taskNumber - 1;
@@ -45,8 +46,9 @@ public class Larry {
 
                 System.out.println(line);
                 System.out.println("Nice! I've marked this task as done:");
-                System.out.println("[X] " + tasks[index]);
+                System.out.println(tasks[index]);
                 System.out.println(line);
+
             } else if (input.startsWith("unmark ")) {
                 int taskNumber = Integer.parseInt(input.substring(7));
                 int index = taskNumber - 1;
@@ -55,21 +57,23 @@ public class Larry {
 
                 System.out.println(line);
                 System.out.println("OK, I've marked this task as not done yet:");
-                System.out.println("[ ] " + tasks[index]);
+                System.out.println(tasks[index]);
                 System.out.println(line);
+
             } else {
                 tasks[taskCount] = new Task(input);
                 taskCount++;
+
                 System.out.println(line);
                 System.out.println("added: " + input);
                 System.out.println(line);
             }
         }
 
+        System.out.println(line);
         System.out.println("Bye. Hope to see you again soon!");
         System.out.println(line);
 
-        // close instance
         scanner.close();
     }
 }
