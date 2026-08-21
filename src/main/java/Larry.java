@@ -20,10 +20,18 @@ public class Larry {
         System.out.println("What can I do for you?");
         System.out.println(line);
 
-        String input = scanner.nextLine();
-        System.out.println(input);
+        while (true) {
+            String input = scanner.nextLine();
+            if (input.equals("bye")) {
+                break;
+            }
+            System.out.println(input);
+        }
 
         System.out.println("Bye. Hope to see you again soon!");
         System.out.println(line);
+
+        // close instance
+        scanner.close();
     }
 }
