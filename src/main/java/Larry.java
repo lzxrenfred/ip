@@ -60,12 +60,48 @@ public class Larry {
                 System.out.println(tasks[index]);
                 System.out.println(line);
 
-            } else {
-                tasks[taskCount] = new Task(input);
+            } else if (input.startsWith("todo ")) {
+                String description = input.substring(5);
+
+                tasks[taskCount] = new Todo(description);
                 taskCount++;
 
                 System.out.println(line);
-                System.out.println("added: " + input);
+                System.out.println("Got it. I've added this task:");
+                System.out.println("  " + tasks[taskCount - 1]);
+                System.out.println("Now you have " + taskCount + " tasks in the list.");
+                System.out.println(line);
+
+            } else if (input.startsWith("deadline ")) {
+                int byIndex = input.indexOf(" /by ");
+
+                String description = input.substring(9, byIndex);
+                String by = input.substring(byIndex + 5);
+
+                tasks[taskCount] = new Deadline(description, by);
+                taskCount++;
+
+                System.out.println(line);
+                System.out.println("Got it. I've added this task:");
+                System.out.println("  " + tasks[taskCount - 1]);
+                System.out.println("Now you have " + taskCount + " tasks in the list.");
+                System.out.println(line);
+
+            } else if (input.startsWith("event ")) {
+                int fromIndex = input.indexOf(" /from ");
+                int toIndex = input.indexOf(" /to ");
+
+                String description = input.substring(6, fromIndex);
+                String from = input.substring(fromIndex + 7, toIndex);
+                String to = input.substring(toIndex + 5);
+
+                tasks[taskCount] = new Event(description, from, to);
+                taskCount++;
+
+                System.out.println(line);
+                System.out.println("Got it. I've added this task:");
+                System.out.println("  " + tasks[taskCount - 1]);
+                System.out.println("Now you have " + taskCount + " tasks in the list.");
                 System.out.println(line);
             }
         }
