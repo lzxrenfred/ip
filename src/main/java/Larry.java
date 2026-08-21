@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Larry {
@@ -41,8 +42,7 @@ public class Larry {
                 + "|_____/_/   \\_\\ |_| \\_\\ |_| \\_\\   |_|  \n";
 
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[100];
-        int taskCount = 0;
+        ArrayList<Task> tasks = new ArrayList<>();
 
         System.out.println(LINE);
         System.out.print(banner);
@@ -63,8 +63,8 @@ public class Larry {
                     System.out.println(LINE);
                     System.out.println("Here are the tasks in your list:");
 
-                    for (int i = 0; i < taskCount; i++) {
-                        System.out.println((i + 1) + "." + tasks[i]);
+                    for (int i = 0; i < tasks.size(); i++) {
+                        System.out.println((i + 1) + "." + tasks.get(i));
                     }
 
                     System.out.println(LINE);
@@ -79,9 +79,9 @@ public class Larry {
                         throw new EmptyDescriptionException("todo");
                     }
 
-                    tasks[taskCount] = new Todo(description);
-                    taskCount++;
-                    printTaskAdded(tasks[taskCount - 1], taskCount);
+                    Task task = new Todo(description);
+                    tasks.add(task);
+                    printTaskAdded(task, tasks.size());
 
                 } else if (input.equals("deadline") || input.startsWith("deadline ")) {
                     int byIndex = input.indexOf(" /by ");
@@ -103,9 +103,9 @@ public class Larry {
                                 "Please specify when the deadline is due after /by.");
                     }
 
-                    tasks[taskCount] = new Deadline(description, by);
-                    taskCount++;
-                    printTaskAdded(tasks[taskCount - 1], taskCount);
+                    Task task = new Deadline(description, by);
+                    tasks.add(task);
+                    printTaskAdded(task, tasks.size());
 
                 } else if (input.equals("event") || input.startsWith("event ")) {
                     int fromIndex = input.indexOf(" /from ");
@@ -129,28 +129,38 @@ public class Larry {
                                 "Please specify both the event start and end times.");
                     }
 
-                    tasks[taskCount] = new Event(description, from, to);
-                    taskCount++;
-                    printTaskAdded(tasks[taskCount - 1], taskCount);
+                    Task task = new Event(description, from, to);
+                    tasks.add(task);
+                    printTaskAdded(task, tasks.size());
 
                 } else if (input.startsWith("mark ")) {
-                    int index = parseTaskIndex(input.substring(5), taskCount);
+                    int index = parseTaskIndex(input.substring(5), tasks.size());
 
-                    tasks[index].markAsDone();
+                    tasks.get(index).markAsDone();
 
                     System.out.println(LINE);
                     System.out.println("Nice! I've marked this task as done:");
-                    System.out.println(tasks[index]);
+                    System.out.println(tasks.get(index));
                     System.out.println(LINE);
 
                 } else if (input.startsWith("unmark ")) {
-                    int index = parseTaskIndex(input.substring(7), taskCount);
+                    int index = parseTaskIndex(input.substring(7), tasks.size());
 
-                    tasks[index].markAsNotDone();
+                    tasks.get(index).markAsNotDone();
 
                     System.out.println(LINE);
                     System.out.println("OK, I've marked this task as not done yet:");
-                    System.out.println(tasks[index]);
+                    System.out.println(tasks.get(index));
+                    System.out.println(LINE);
+
+                } else if (input.startsWith("delete ")) {
+                    int index = parseTaskIndex(input.substring(7), tasks.size());
+                    Task removedTask = tasks.remove(index);
+
+                    System.out.println(LINE);
+                    System.out.println("Noted. I've removed this task:");
+                    System.out.println("  " + removedTask);
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                     System.out.println(LINE);
 
                 } else {
