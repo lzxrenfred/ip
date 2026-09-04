@@ -98,6 +98,8 @@ public class Larry {
             unmarkTask(input, tasks);
         } else if (input.startsWith("delete ")) {
             deleteTask(input, tasks);
+        } else if (input.startsWith("find ")) {
+            findTasks(input, tasks);
         } else {
             throw new UnknownCommandException();
         }
@@ -261,6 +263,23 @@ public class Larry {
         System.out.println("Got it. I've added this task:");
         System.out.println("  " + task);
         System.out.println("Now you have " + taskCount + " tasks in the list.");
+        System.out.println(LINE);
+    }
+
+    private static void findTasks(String input, ArrayList<Task> tasks) {
+        String keyword = input.substring(5).trim();
+
+        System.out.println(LINE);
+        System.out.println("Here are the matching tasks in your list:");
+
+        int matchNumber = 1;
+        for (Task task : tasks) {
+            if (task.getDescription().contains(keyword)) {
+                System.out.println(matchNumber + "." + task);
+                matchNumber++;
+            }
+        }
+
         System.out.println(LINE);
     }
 }

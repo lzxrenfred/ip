@@ -11,6 +11,10 @@ public class Task {
         this.type = type;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public String getStatusIcon() {
         return isDone ? "X" : " ";
     }
