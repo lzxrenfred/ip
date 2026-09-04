@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Runs the Larry task management application.
+ */
 public class Larry {
     private static final String LINE = "____________________________________________________________";
     private static final String SAVE_FILE_PATH = "data/larry.txt";
@@ -40,6 +43,11 @@ public class Larry {
         }
     }
 
+    /**
+     * Starts Larry and processes user commands until the user exits.
+     *
+     * @param args Command-line arguments supplied to the application.
+     */
     public static void main(String[] args) {
         String banner = " _        _      ____    ____   __   __\n"
                 + "| |      / \\    |  _ \\  |  _ \\  \\ \\ / /\n"
