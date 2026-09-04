@@ -1,5 +1,8 @@
 package larry;
 
+/**
+ * Represents the supported types of tasks in Larry.
+ */
 public enum TaskType {
     TODO("T"),
     DEADLINE("D"),

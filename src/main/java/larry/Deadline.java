@@ -3,9 +3,18 @@ package larry;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Represents a task that must be completed by a specified date.
+ */
 public class Deadline extends Task {
     private LocalDate by;
 
+    /**
+     * Creates a deadline task with the specified description and due date.
+     *
+     * @param description Description of the deadline task.
+     * @param by Due date in ISO date format.
+     */
     public Deadline(String description, String by) {
         super(description, TaskType.DEADLINE);
         this.by = LocalDate.parse(by);
