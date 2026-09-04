@@ -1,3 +1,5 @@
+package larry;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -51,7 +53,7 @@ public class Larry {
         System.out.println(LINE);
         System.out.print(banner);
         System.out.println(LINE);
-        System.out.println("Hello! I'm Larry! :)");
+        System.out.println("Hello! I'm larry.Larry! :)");
         System.out.println("What can I do for you?");
         System.out.println(LINE);
 
