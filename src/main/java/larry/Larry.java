@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Larry {
@@ -48,7 +49,7 @@ public class Larry {
                 + "|_____/_/   \\_\\ |_| \\_\\ |_| \\_\\   |_|  \n";
 
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> tasks = new ArrayList<>();
+        List<Task> tasks = new ArrayList<>();
 
         System.out.println(LINE);
         System.out.print(banner);
@@ -80,7 +81,7 @@ public class Larry {
         scanner.close();
     }
 
-    private static void handleCommand(String input, ArrayList<Task> tasks)
+    private static void handleCommand(String input, List<Task> tasks)
             throws LarryException {
         if (input.equals("list")) {
             printTaskList(tasks);
@@ -103,7 +104,7 @@ public class Larry {
         }
     }
 
-    private static void printTaskList(ArrayList<Task> tasks) {
+    private static void printTaskList(List<Task> tasks) {
         System.out.println(LINE);
         System.out.println("Here are the tasks in your list:");
 
@@ -114,7 +115,7 @@ public class Larry {
         System.out.println(LINE);
     }
 
-    private static void addTodo(String input, ArrayList<Task> tasks)
+    private static void addTodo(String input, List<Task> tasks)
             throws EmptyDescriptionException {
         String description = input.substring(5).trim();
 
@@ -128,7 +129,7 @@ public class Larry {
         printTaskAdded(task, tasks.size());
     }
 
-    private static void addDeadline(String input, ArrayList<Task> tasks)
+    private static void addDeadline(String input, List<Task> tasks)
             throws LarryException {
         int byIndex = input.indexOf(" /by ");
 
@@ -155,7 +156,7 @@ public class Larry {
         printTaskAdded(task, tasks.size());
     }
 
-    private static void addEvent(String input, ArrayList<Task> tasks)
+    private static void addEvent(String input, List<Task> tasks)
             throws LarryException {
         int fromIndex = input.indexOf(" /from ");
         int toIndex = input.indexOf(" /to ");
@@ -184,7 +185,7 @@ public class Larry {
         printTaskAdded(task, tasks.size());
     }
 
-    private static void markTask(String input, ArrayList<Task> tasks)
+    private static void markTask(String input, List<Task> tasks)
             throws InvalidTaskNumberException {
         int index = parseTaskIndex(input.substring(5), tasks.size());
 
@@ -197,7 +198,7 @@ public class Larry {
         System.out.println(LINE);
     }
 
-    private static void unmarkTask(String input, ArrayList<Task> tasks)
+    private static void unmarkTask(String input, List<Task> tasks)
             throws InvalidTaskNumberException {
         int index = parseTaskIndex(input.substring(7), tasks.size());
 
@@ -210,7 +211,7 @@ public class Larry {
         System.out.println(LINE);
     }
 
-    private static void deleteTask(String input, ArrayList<Task> tasks)
+    private static void deleteTask(String input, List<Task> tasks)
             throws InvalidTaskNumberException {
         int index = parseTaskIndex(input.substring(7), tasks.size());
         Task removedTask = tasks.remove(index);
@@ -223,7 +224,7 @@ public class Larry {
         System.out.println(LINE);
     }
 
-    private static void saveTasks(ArrayList<Task> tasks) {
+    private static void saveTasks(List<Task> tasks) {
         try {
             File file = new File(SAVE_FILE_PATH);
             file.getParentFile().mkdirs();
