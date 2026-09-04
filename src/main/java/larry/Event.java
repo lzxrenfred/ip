@@ -4,8 +4,8 @@ package larry;
  * Represents an event that occurs between specified start and end times.
  */
 public class Event extends Task {
-    protected String from;
-    protected String to;
+    private String from;
+    private String to;
 
     /**
      * Creates an event with the specified description, start time, and end time.
