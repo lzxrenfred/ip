@@ -275,7 +275,7 @@ public class Larry {
         System.out.println(LINE);
     }
 
-    private static void findTasks(String input, ArrayList<Task> tasks) {
+    private static void findTasks(String input, List<Task> tasks) {
         String keyword = input.substring(5).trim();
 
         System.out.println(LINE);
