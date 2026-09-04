@@ -1,8 +1,12 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Larry {
     private static final String LINE = "____________________________________________________________";
+    private static final String SAVE_FILE_PATH = "data/larry.txt";
 
     private static class LarryException extends Exception {
         public LarryException(String message) {
@@ -81,6 +85,7 @@ public class Larry {
 
                     Task task = new Todo(description);
                     tasks.add(task);
+                    saveTasks(tasks);
                     printTaskAdded(task, tasks.size());
 
                 } else if (input.equals("deadline") || input.startsWith("deadline ")) {
@@ -105,6 +110,7 @@ public class Larry {
 
                     Task task = new Deadline(description, by);
                     tasks.add(task);
+                    saveTasks(tasks);
                     printTaskAdded(task, tasks.size());
 
                 } else if (input.equals("event") || input.startsWith("event ")) {
@@ -131,12 +137,14 @@ public class Larry {
 
                     Task task = new Event(description, from, to);
                     tasks.add(task);
+                    saveTasks(tasks);
                     printTaskAdded(task, tasks.size());
 
                 } else if (input.startsWith("mark ")) {
                     int index = parseTaskIndex(input.substring(5), tasks.size());
 
                     tasks.get(index).markAsDone();
+                    saveTasks(tasks);
 
                     System.out.println(LINE);
                     System.out.println("Nice! I've marked this task as done:");
@@ -147,6 +155,7 @@ public class Larry {
                     int index = parseTaskIndex(input.substring(7), tasks.size());
 
                     tasks.get(index).markAsNotDone();
+                    saveTasks(tasks);
 
                     System.out.println(LINE);
                     System.out.println("OK, I've marked this task as not done yet:");
@@ -156,6 +165,7 @@ public class Larry {
                 } else if (input.startsWith("delete ")) {
                     int index = parseTaskIndex(input.substring(7), tasks.size());
                     Task removedTask = tasks.remove(index);
+                    saveTasks(tasks);
 
                     System.out.println(LINE);
                     System.out.println("Noted. I've removed this task:");
@@ -179,6 +189,24 @@ public class Larry {
         System.out.println(LINE);
 
         scanner.close();
+    }
+
+    private static void saveTasks(ArrayList<Task> tasks) {
+        try {
+            File file = new File(SAVE_FILE_PATH);
+            file.getParentFile().mkdirs();
+
+            FileWriter writer = new FileWriter(file);
+
+            for (Task task : tasks) {
+                writer.write(task.toString() + System.lineSeparator());
+            }
+
+            writer.close();
+
+        } catch (IOException e) {
+            System.out.println("Could not save tasks.");
+        }
     }
 
     private static int parseTaskIndex(String numberText, int taskCount)
