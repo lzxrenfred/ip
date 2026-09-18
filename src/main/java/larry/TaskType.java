@@ -18,3 +18,4 @@ public enum TaskType {
         return icon;
     }
 }
+

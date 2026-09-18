@@ -47,3 +47,4 @@ public class Task {
         return "[" + type.getIcon() + "][" + getStatusIcon() + "] " + description;
     }
 }
+
