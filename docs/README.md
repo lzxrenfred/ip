@@ -2,7 +2,7 @@
 
 Larry is a personal task manager that helps you keep track of todos, deadlines, and events using simple text commands.
 
-![Larry GUI](UI.png)
+![Larry GUI](Ui.png)
 
 ## Quick start
 
