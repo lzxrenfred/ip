@@ -3,6 +3,7 @@ package larry;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,6 +75,14 @@ public class Larry {
             return addDeadline(input);
         } else if (input.equals("event") || input.startsWith("event ")) {
             return addEvent(input);
+        } else if (input.equals("mark")) {
+            throw new InvalidTaskNumberException();
+        } else if (input.equals("unmark")) {
+            throw new InvalidTaskNumberException();
+        } else if (input.equals("delete")) {
+            throw new InvalidTaskNumberException();
+        } else if (input.equals("find")) {
+            throw new InvalidFormatException("Please specify a keyword to find.");
         } else if (input.startsWith("mark ")) {
             return markTask(input);
         } else if (input.startsWith("unmark ")) {
@@ -144,8 +153,13 @@ public class Larry {
                     "Please specify when the deadline is due after /by.");
         }
 
-        Task task = new Deadline(description, by);
-        return addTask(task);
+        try {
+            Task task = new Deadline(description, by);
+            return addTask(task);
+        } catch (DateTimeParseException e) {
+            throw new InvalidFormatException(
+                    "Please use a valid date in yyyy-mm-dd format.");
+        }
     }
 
     private String addEvent(String input) throws LarryException {
@@ -252,8 +266,12 @@ public class Larry {
                 + " tasks in the list.";
     }
 
-    private String findTasks(String input) {
+    private String findTasks(String input) throws InvalidFormatException {
         String keyword = input.substring(5).trim();
+
+        if (keyword.isEmpty()) {
+            throw new InvalidFormatException("Please specify a keyword to find.");
+        }
         StringBuilder response = new StringBuilder(
                 "Here are the matching tasks in your list:");
 
