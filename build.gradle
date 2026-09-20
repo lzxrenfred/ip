@@ -1,7 +1,13 @@
 plugins {
     id 'java'
     id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'com.gradleup.shadow' version '9.5.1'
+}
+
+javafx {
+    version = '17.0.8'
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
 java {
@@ -37,7 +43,7 @@ test {
 }
 
 application {
-    mainClass = 'larry.Larry'
+    mainClass = 'larry.Launcher'
 }
 
 jar {
