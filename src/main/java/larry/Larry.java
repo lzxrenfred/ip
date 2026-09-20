@@ -315,26 +315,26 @@ public class Larry {
             Task task;
 
             switch (type) {
-            case "T":
-                task = new Todo(description);
-                break;
-            case "D":
-                if (parts.length != 4) {
+                case "T":
+                    task = new Todo(description);
+                    break;
+                case "D":
+                    if (parts.length != 4) {
+                        return null;
+                    }
+                    task = new Deadline(description, parts[3]);
+                    break;
+                case "E":
+                    if (parts.length != 5) {
+                        return null;
+                    }
+                    task = new Event(
+                            description,
+                            unescape(parts[3]),
+                            unescape(parts[4]));
+                    break;
+                default:
                     return null;
-                }
-                task = new Deadline(description, parts[3]);
-                break;
-            case "E":
-                if (parts.length != 5) {
-                    return null;
-                }
-                task = new Event(
-                        description,
-                        unescape(parts[3]),
-                        unescape(parts[4]));
-                break;
-            default:
-                return null;
             }
 
             if (isDone) {
