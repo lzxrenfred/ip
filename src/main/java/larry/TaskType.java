@@ -14,6 +14,11 @@ public enum TaskType {
         this.icon = icon;
     }
 
+    /**
+     * Returns the icon used to represent this task type.
+     *
+     * @return Icon for this task type.
+     */
     public String getIcon() {
         return icon;
     }

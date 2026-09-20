@@ -3,6 +3,8 @@ package larry;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,13 @@ import java.util.List;
 public class Larry {
     private static final String SAVE_FILE_PATH = "data/larry.txt";
     private final List<Task> tasks = new ArrayList<>();
+
+    /**
+     * Creates a Larry task manager and loads previously saved tasks.
+     */
+    public Larry() {
+        loadTasks();
+    }
 
     private static class LarryException extends Exception {
         public LarryException(String message) {
@@ -220,21 +229,142 @@ public class Larry {
                 + " tasks in the list.";
     }
 
+    /**
+     * Saves all current tasks to disk.
+     */
     private void saveTasks() {
         try {
             File file = new File(SAVE_FILE_PATH);
             file.getParentFile().mkdirs();
 
-            FileWriter writer = new FileWriter(file);
-
-            for (Task task : tasks) {
-                writer.write(task.toString() + System.lineSeparator());
+            try (FileWriter writer = new FileWriter(file)) {
+                for (Task task : tasks) {
+                    writer.write(serializeTask(task) + System.lineSeparator());
+                }
             }
-
-            writer.close();
         } catch (IOException e) {
             System.out.println("Could not save tasks.");
         }
+    }
+
+    /**
+     * Loads previously saved tasks from disk.
+     * Invalid records are skipped instead of preventing Larry from starting.
+     */
+    private void loadTasks() {
+        Path path = Path.of(SAVE_FILE_PATH);
+
+        if (!Files.exists(path)) {
+            return;
+        }
+
+        try {
+            for (String line : Files.readAllLines(path)) {
+                Task task = deserializeTask(line);
+
+                if (task != null) {
+                    tasks.add(task);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Could not load tasks.");
+        }
+    }
+
+    /**
+     * Converts a task into a record suitable for storage.
+     *
+     * @param task Task to serialize.
+     * @return Serialized task record.
+     */
+    private String serializeTask(Task task) {
+        String status = task.isDone() ? "1" : "0";
+        String description = escape(task.getDescription());
+
+        if (task instanceof Deadline deadline) {
+            return "D | " + status + " | " + description
+                    + " | " + deadline.getBy();
+        }
+
+        if (task instanceof Event event) {
+            return "E | " + status + " | " + description
+                    + " | " + escape(event.getFrom())
+                    + " | " + escape(event.getTo());
+        }
+
+        return "T | " + status + " | " + description;
+    }
+
+    /**
+     * Reconstructs a task from a stored record.
+     *
+     * @param line Stored task record.
+     * @return Reconstructed task, or null if the record is invalid.
+     */
+    private Task deserializeTask(String line) {
+        try {
+            String[] parts = line.split(" \\| ", -1);
+
+            if (parts.length < 3) {
+                return null;
+            }
+
+            String type = parts[0];
+            boolean isDone = parts[1].equals("1");
+            String description = unescape(parts[2]);
+            Task task;
+
+            switch (type) {
+            case "T":
+                task = new Todo(description);
+                break;
+            case "D":
+                if (parts.length != 4) {
+                    return null;
+                }
+                task = new Deadline(description, parts[3]);
+                break;
+            case "E":
+                if (parts.length != 5) {
+                    return null;
+                }
+                task = new Event(
+                        description,
+                        unescape(parts[3]),
+                        unescape(parts[4]));
+                break;
+            default:
+                return null;
+            }
+
+            if (isDone) {
+                task.markAsDone();
+            }
+
+            return task;
+        } catch (RuntimeException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Escapes characters that could interfere with the storage delimiter.
+     *
+     * @param text Text to escape.
+     * @return Escaped text.
+     */
+    private String escape(String text) {
+        return text.replace("%", "%25").replace("|", "%7C");
+    }
+
+    /**
+     * Restores text escaped for storage.
+     *
+     * @param text Escaped text.
+     * @return Original text.
+     */
+    private String unescape(String text) {
+        return text.replace("%7C", "|").replace("%25", "%");
     }
 
     private static int parseTaskIndex(String numberText, int taskCount)

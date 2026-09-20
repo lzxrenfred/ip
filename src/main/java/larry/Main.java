@@ -13,6 +13,11 @@ public class Main extends javafx.application.Application {
 
     private Larry larry = new Larry();
 
+    /**
+     * Starts the Larry JavaFX application and displays its main window.
+     *
+     * @param stage Primary application stage supplied by JavaFX.
+     */
     @Override
     public void start(Stage stage) {
         try {
