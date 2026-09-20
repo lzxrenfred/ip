@@ -106,9 +106,7 @@ public class Larry {
         }
 
         Task task = new Todo(description);
-        tasks.add(task);
-        saveTasks();
-        return getTaskAddedResponse(task);
+        return addTask(task);
     }
 
     private String addDeadline(String input) throws LarryException {
@@ -132,9 +130,7 @@ public class Larry {
         }
 
         Task task = new Deadline(description, by);
-        tasks.add(task);
-        saveTasks();
-        return getTaskAddedResponse(task);
+        return addTask(task);
     }
 
     private String addEvent(String input) throws LarryException {
@@ -160,9 +156,7 @@ public class Larry {
         }
 
         Task task = new Event(description, from, to);
-        tasks.add(task);
-        saveTasks();
-        return getTaskAddedResponse(task);
+        return addTask(task);
     }
 
     private String markTask(String input) throws InvalidTaskNumberException {
@@ -228,6 +222,12 @@ public class Larry {
         } catch (NumberFormatException e) {
             throw new InvalidTaskNumberException();
         }
+    }
+
+    private String addTask(Task task) {
+        tasks.add(task);
+        saveTasks();
+        return getTaskAddedResponse(task);
     }
 
     private String getTaskAddedResponse(Task task) {
