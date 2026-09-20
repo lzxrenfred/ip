@@ -8,7 +8,7 @@ public class DeadlineTest {
     public void toString_validDate_formatsDateCorrectly() {
         Deadline deadline = new Deadline("submit assignment", "2026-09-10");
         assertEquals(
-                "[D][ ] submit assignment (by: Sept 10 2026)",
+                "[D][ ] submit assignment (by: Sep 10 2026)",
                 deadline.toString()
         );
     }
@@ -18,7 +18,7 @@ public class DeadlineTest {
         Deadline deadline = new Deadline("submit assignment", "2026-09-10");
         deadline.markAsDone();
         assertEquals(
-                "[D][X] submit assignment (by: Sept 10 2026)",
+                "[D][X] submit assignment (by: Sep 10 2026)",
                 deadline.toString()
         );
     }

@@ -2,6 +2,7 @@ package larry;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 /**
  * Represents a task that must be completed by a specified date.
@@ -22,6 +23,6 @@ public class Deadline extends Task {
 
     @Override
     public String toString() {
-        return super.toString() + " (by: " + by.format(DateTimeFormatter.ofPattern("MMM d yyyy")) + ")";
+        return super.toString() + " (by: " + by.format(DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US)) + ")";
     }
 }
