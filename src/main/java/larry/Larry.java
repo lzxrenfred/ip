@@ -267,12 +267,19 @@ public class Larry {
         }
     }
 
+    private static void printLines(String... lines) {
+        for (String line : lines) {
+            System.out.println(line);
+        }
+    }
+
     private static void printTaskAdded(Task task, int taskCount) {
-        System.out.println(LINE);
-        System.out.println("Got it. I've added this task:");
-        System.out.println("  " + task);
-        System.out.println("Now you have " + taskCount + " tasks in the list.");
-        System.out.println(LINE);
+        printLines(
+                LINE,
+                "Got it. I've added this task:",
+                "  " + task,
+                "Now you have " + taskCount + " tasks in the list.",
+                LINE);
     }
 
     private static void findTasks(String input, List<Task> tasks) {
