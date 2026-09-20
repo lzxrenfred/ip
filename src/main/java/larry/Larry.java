@@ -167,6 +167,7 @@ public class Larry {
 
     private String markTask(String input) throws InvalidTaskNumberException {
         int index = parseTaskIndex(input.substring(5), tasks.size());
+        assert index >= 0 && index < tasks.size();
         tasks.get(index).markAsDone();
         saveTasks();
 
@@ -176,6 +177,7 @@ public class Larry {
 
     private String unmarkTask(String input) throws InvalidTaskNumberException {
         int index = parseTaskIndex(input.substring(7), tasks.size());
+        assert index >= 0 && index < tasks.size();
         tasks.get(index).markAsNotDone();
         saveTasks();
 
@@ -185,6 +187,7 @@ public class Larry {
 
     private String deleteTask(String input) throws InvalidTaskNumberException {
         int index = parseTaskIndex(input.substring(7), tasks.size());
+        assert index >= 0 && index < tasks.size();
         Task removedTask = tasks.remove(index);
         saveTasks();
 
