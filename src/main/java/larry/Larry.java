@@ -5,14 +5,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * Runs the Larry task management application.
  */
 public class Larry {
-    private static final String LINE = "____________________________________________________________";
     private static final String SAVE_FILE_PATH = "data/larry.txt";
+    private final List<Task> tasks = new ArrayList<>();
 
     private static class LarryException extends Exception {
         public LarryException(String message) {
@@ -45,88 +44,61 @@ public class Larry {
     }
 
     /**
-     * Starts Larry and processes user commands until the user exits.
+     * Returns Larry's response to a user command.
      *
-     * @param args Command-line arguments supplied to the application.
+     * @param input User command.
+     * @return Larry's response.
      */
-    public static void main(String[] args) {
-        String banner = " _        _      ____    ____   __   __\n"
-                + "| |      / \\    |  _ \\  |  _ \\  \\ \\ / /\n"
-                + "| |     / _ \\   | |_) | | |_) |  \\ V / \n"
-                + "| |___ / ___ \\  |  _ <  |  _ <    | |  \n"
-                + "|_____/_/   \\_\\ |_| \\_\\ |_| \\_\\   |_|  \n";
-
-        Scanner scanner = new Scanner(System.in);
-        List<Task> tasks = new ArrayList<>();
-
-        System.out.println(LINE);
-        System.out.print(banner);
-        System.out.println(LINE);
-        System.out.println("Hello! I'm Larry! :)");
-        System.out.println("What can I do for you?");
-        System.out.println(LINE);
-
-        while (true) {
-            String input = scanner.nextLine();
-
-            if (input.equals("bye")) {
-                break;
-            }
-
-            try {
-                handleCommand(input, tasks);
-            } catch (LarryException e) {
-                System.out.println(LINE);
-                System.out.println("OOPS!!! " + e.getMessage());
-                System.out.println(LINE);
-            }
+    public String getResponse(String input) {
+        if (input.equals("bye")) {
+            return "Bye. Hope to see you again soon!";
         }
 
-        System.out.println(LINE);
-        System.out.println("Bye. Hope to see you again soon!");
-        System.out.println(LINE);
-
-        scanner.close();
+        try {
+            return handleCommand(input);
+        } catch (LarryException e) {
+            return "OOPS!!! " + e.getMessage();
+        }
     }
 
-    private static void handleCommand(String input, List<Task> tasks)
-            throws LarryException {
+    private String handleCommand(String input) throws LarryException {
         if (input.equals("list")) {
-            printTaskList(tasks);
+            return getTaskList();
         } else if (input.equals("todo")) {
             throw new EmptyDescriptionException("todo");
         } else if (input.startsWith("todo ")) {
-            addTodo(input, tasks);
+            return addTodo(input);
         } else if (input.equals("deadline") || input.startsWith("deadline ")) {
-            addDeadline(input, tasks);
+            return addDeadline(input);
         } else if (input.equals("event") || input.startsWith("event ")) {
-            addEvent(input, tasks);
+            return addEvent(input);
         } else if (input.startsWith("mark ")) {
-            markTask(input, tasks);
+            return markTask(input);
         } else if (input.startsWith("unmark ")) {
-            unmarkTask(input, tasks);
+            return unmarkTask(input);
         } else if (input.startsWith("delete ")) {
-            deleteTask(input, tasks);
+            return deleteTask(input);
         } else if (input.startsWith("find ")) {
-            findTasks(input, tasks);
+            return findTasks(input);
         } else {
             throw new UnknownCommandException();
         }
     }
 
-    private static void printTaskList(List<Task> tasks) {
-        System.out.println(LINE);
-        System.out.println("Here are the tasks in your list:");
+    private String getTaskList() {
+        StringBuilder response = new StringBuilder("Here are the tasks in your list:");
 
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println((i + 1) + "." + tasks.get(i));
+            response.append(System.lineSeparator())
+                    .append(i + 1)
+                    .append(".")
+                    .append(tasks.get(i));
         }
 
-        System.out.println(LINE);
+        return response.toString();
     }
 
-    private static void addTodo(String input, List<Task> tasks)
-            throws EmptyDescriptionException {
+    private String addTodo(String input) throws EmptyDescriptionException {
         String description = input.substring(5).trim();
 
         if (description.isEmpty()) {
@@ -135,12 +107,11 @@ public class Larry {
 
         Task task = new Todo(description);
         tasks.add(task);
-        saveTasks(tasks);
-        printTaskAdded(task, tasks.size());
+        saveTasks();
+        return getTaskAddedResponse(task);
     }
 
-    private static void addDeadline(String input, List<Task> tasks)
-            throws LarryException {
+    private String addDeadline(String input) throws LarryException {
         int byIndex = input.indexOf(" /by ");
 
         if (byIndex == -1) {
@@ -162,12 +133,11 @@ public class Larry {
 
         Task task = new Deadline(description, by);
         tasks.add(task);
-        saveTasks(tasks);
-        printTaskAdded(task, tasks.size());
+        saveTasks();
+        return getTaskAddedResponse(task);
     }
 
-    private static void addEvent(String input, List<Task> tasks)
-            throws LarryException {
+    private String addEvent(String input) throws LarryException {
         int fromIndex = input.indexOf(" /from ");
         int toIndex = input.indexOf(" /to ");
 
@@ -191,50 +161,40 @@ public class Larry {
 
         Task task = new Event(description, from, to);
         tasks.add(task);
-        saveTasks(tasks);
-        printTaskAdded(task, tasks.size());
+        saveTasks();
+        return getTaskAddedResponse(task);
     }
 
-    private static void markTask(String input, List<Task> tasks)
-            throws InvalidTaskNumberException {
+    private String markTask(String input) throws InvalidTaskNumberException {
         int index = parseTaskIndex(input.substring(5), tasks.size());
-
         tasks.get(index).markAsDone();
-        saveTasks(tasks);
+        saveTasks();
 
-        System.out.println(LINE);
-        System.out.println("Nice! I've marked this task as done:");
-        System.out.println(tasks.get(index));
-        System.out.println(LINE);
+        return "Nice! I've marked this task as done:"
+                + System.lineSeparator() + tasks.get(index);
     }
 
-    private static void unmarkTask(String input, List<Task> tasks)
-            throws InvalidTaskNumberException {
+    private String unmarkTask(String input) throws InvalidTaskNumberException {
         int index = parseTaskIndex(input.substring(7), tasks.size());
-
         tasks.get(index).markAsNotDone();
-        saveTasks(tasks);
+        saveTasks();
 
-        System.out.println(LINE);
-        System.out.println("OK, I've marked this task as not done yet:");
-        System.out.println(tasks.get(index));
-        System.out.println(LINE);
+        return "OK, I've marked this task as not done yet:"
+                + System.lineSeparator() + tasks.get(index);
     }
 
-    private static void deleteTask(String input, List<Task> tasks)
-            throws InvalidTaskNumberException {
+    private String deleteTask(String input) throws InvalidTaskNumberException {
         int index = parseTaskIndex(input.substring(7), tasks.size());
         Task removedTask = tasks.remove(index);
-        saveTasks(tasks);
+        saveTasks();
 
-        System.out.println(LINE);
-        System.out.println("Noted. I've removed this task:");
-        System.out.println("  " + removedTask);
-        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
-        System.out.println(LINE);
+        return "Noted. I've removed this task:"
+                + System.lineSeparator() + "  " + removedTask
+                + System.lineSeparator() + "Now you have " + tasks.size()
+                + " tasks in the list.";
     }
 
-    private static void saveTasks(List<Task> tasks) {
+    private void saveTasks() {
         try {
             File file = new File(SAVE_FILE_PATH);
             file.getParentFile().mkdirs();
@@ -267,28 +227,29 @@ public class Larry {
         }
     }
 
-    private static void printTaskAdded(Task task, int taskCount) {
-        System.out.println(LINE);
-        System.out.println("Got it. I've added this task:");
-        System.out.println("  " + task);
-        System.out.println("Now you have " + taskCount + " tasks in the list.");
-        System.out.println(LINE);
+    private String getTaskAddedResponse(Task task) {
+        return "Got it. I've added this task:"
+                + System.lineSeparator() + "  " + task
+                + System.lineSeparator() + "Now you have " + tasks.size()
+                + " tasks in the list.";
     }
 
-    private static void findTasks(String input, List<Task> tasks) {
+    private String findTasks(String input) {
         String keyword = input.substring(5).trim();
-
-        System.out.println(LINE);
-        System.out.println("Here are the matching tasks in your list:");
+        StringBuilder response = new StringBuilder(
+                "Here are the matching tasks in your list:");
 
         int matchNumber = 1;
         for (Task task : tasks) {
             if (task.getDescription().contains(keyword)) {
-                System.out.println(matchNumber + "." + task);
+                response.append(System.lineSeparator())
+                        .append(matchNumber)
+                        .append(".")
+                        .append(task);
                 matchNumber++;
             }
         }
 
-        System.out.println(LINE);
+        return response.toString();
     }
 }
