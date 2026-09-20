@@ -62,7 +62,9 @@ public class Larry {
     }
 
     private String handleCommand(String input) throws LarryException {
-        if (input.equals("list")) {
+        if (input.equals("help")) {
+            return getHelpMessage();
+        } else if (input.equals("list")) {
             return getTaskList();
         } else if (input.equals("todo")) {
             throw new EmptyDescriptionException("todo");
@@ -83,6 +85,19 @@ public class Larry {
         } else {
             throw new UnknownCommandException();
         }
+    }
+
+    private String getHelpMessage() {
+        return "Here are the commands you can use:"
+                + System.lineSeparator() + "list"
+                + System.lineSeparator() + "todo <description>"
+                + System.lineSeparator() + "deadline <description> /by <yyyy-mm-dd>"
+                + System.lineSeparator() + "event <description> /from <start> /to <end>"
+                + System.lineSeparator() + "mark <task number>"
+                + System.lineSeparator() + "unmark <task number>"
+                + System.lineSeparator() + "delete <task number>"
+                + System.lineSeparator() + "find <keyword>"
+                + System.lineSeparator() + "bye";
     }
 
     private String getTaskList() {
