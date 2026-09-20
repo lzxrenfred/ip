@@ -1,9 +1,16 @@
 package larry;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 
 /**
  * Controller for the main GUI.
@@ -11,7 +18,10 @@ import javafx.scene.control.TextField;
 public class MainWindow {
 
     @FXML
-    private TextArea dialogArea;
+    private VBox dialogContainer;
+
+    @FXML
+    private ScrollPane scrollPane;
 
     @FXML
     private TextField userInput;
@@ -28,7 +38,7 @@ public class MainWindow {
      */
     public void setLarry(Larry larry) {
         this.larry = larry;
-        dialogArea.appendText("Hello! I'm Larry! :)\nWhat can I do for you?\n\n");
+        addLarryMessage("Hello! I'm Larry :)\nWhat can I do for you?");
     }
 
     @FXML
@@ -39,11 +49,84 @@ public class MainWindow {
             return;
         }
 
-        String response = larry.getResponse(input);
-
-        dialogArea.appendText("You: " + input + "\n");
-        dialogArea.appendText("Larry: " + response + "\n\n");
-
+        addUserMessage(input);
         userInput.clear();
+
+        String response = larry.getResponse(input);
+        addLarryMessage(response);
+    }
+
+    private void addUserMessage(String message) {
+        Label bubble = createBubble(
+                message,
+                "#202124",
+                "white"
+        );
+
+        HBox row = new HBox(bubble);
+        row.setAlignment(Pos.CENTER_RIGHT);
+        row.setPadding(new Insets(3, 0, 3, 60));
+
+        dialogContainer.getChildren().add(row);
+        scrollToBottom();
+    }
+
+    private void addLarryMessage(String message) {
+        Label avatar = new Label("L");
+        avatar.setAlignment(Pos.CENTER);
+        avatar.setMinSize(32, 32);
+        avatar.setMaxSize(32, 32);
+        avatar.setStyle(
+                "-fx-background-color: #202124;"
+                        + "-fx-background-radius: 16;"
+                        + "-fx-text-fill: white;"
+                        + "-fx-font-weight: bold;"
+        );
+
+        Label bubble = createBubble(
+                message,
+                "#eeeeec",
+                "#202124"
+        );
+
+        VBox messageBox = new VBox(4);
+
+        Label name = new Label("Larry");
+        name.setStyle(
+                "-fx-text-fill: #777777;"
+                        + "-fx-font-size: 10px;"
+                        + "-fx-font-weight: bold;"
+        );
+
+        messageBox.getChildren().addAll(name, bubble);
+
+        HBox row = new HBox(9, avatar, messageBox);
+        row.setAlignment(Pos.TOP_LEFT);
+        row.setPadding(new Insets(3, 60, 3, 0));
+
+        dialogContainer.getChildren().add(row);
+        scrollToBottom();
+    }
+
+    private Label createBubble(String message, String background, String textColor) {
+        Label bubble = new Label(message);
+
+        bubble.setWrapText(true);
+        bubble.setMaxWidth(300);
+        bubble.setPadding(new Insets(10, 14, 10, 14));
+
+        bubble.setStyle(
+                "-fx-background-color: " + background + ";"
+                        + "-fx-background-radius: 14;"
+                        + "-fx-text-fill: " + textColor + ";"
+                        + "-fx-font-size: 13px;"
+        );
+
+        return bubble;
+    }
+
+    private void scrollToBottom() {
+        scrollPane.layout();
+        scrollPane.setVvalue(1.0);
     }
 }
