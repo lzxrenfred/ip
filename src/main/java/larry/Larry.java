@@ -239,15 +239,15 @@ public class Larry {
         StringBuilder response = new StringBuilder(
                 "Here are the matching tasks in your list:");
 
-        int matchNumber = 1;
-        for (Task task : tasks) {
-            if (task.getDescription().contains(keyword)) {
-                response.append(System.lineSeparator())
-                        .append(matchNumber)
-                        .append(".")
-                        .append(task);
-                matchNumber++;
-            }
+        List<Task> matchingTasks = tasks.stream()
+                .filter(task -> task.getDescription().contains(keyword))
+                .toList();
+
+        for (int i = 0; i < matchingTasks.size(); i++) {
+            response.append(System.lineSeparator())
+                    .append(i + 1)
+                    .append(".")
+                    .append(matchingTasks.get(i));
         }
 
         return response.toString();
